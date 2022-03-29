@@ -17,7 +17,7 @@ HRMonitor calls one of our  made-function, signaltime (see image below) which us
 ![](img/SignalTime.png)
 
 The figure below is a plot of the values from ‘rawsignalvector’ in relation to the values from ‘timevector.’
-![](img/Raw Signal.png)
+![](img/Raw_Signal.png)
 
 The next part of HRmonitor is to call another one of our made-function called BestCurveFit (see image below). BestCurveFit uses variables ‘maxdegree’, ‘signalsizevector’, and ‘rawsignalvector’ to create a curve that best fits the raw signal. The function ‘polyfit’ requires the degree number as an input but we do not know which degree number works best for the curve so we used a ‘for’ loop for each degree from 1 to ‘maxdegree’ (a variable from HRVariables). 
 
