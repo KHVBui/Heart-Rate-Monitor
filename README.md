@@ -1,6 +1,7 @@
 # Heart-Rate-Monitor
 A MATLAB project to create a heart rate monitor using an LED and an Arduino
 
+Click for the Youtube Video
 [![Heart Rate Monitor](https://i.ytimg.com/vi/GZ0H1_ijjwY/maxresdefault.jpg)](https://www.youtube.com/watch?v=GZ0H1_ijjwY "Heart Rate Monitor")
 
 Our heart rate code consists of four made-functions and two scripts including the main script. The script called HRVariables (see image below) contains values that will be called in the the script HRMonitor, the main script. We like to keep values of variables in a separate script for convenience such as quick manipulation of the variables and keeping the main script from being too lengthy.
