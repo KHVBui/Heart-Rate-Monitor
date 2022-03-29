@@ -17,7 +17,7 @@ HRMonitor calls one of our  made-function, signaltime (see image below) which us
 ![](img/SignalTime.png)
 
 The figure below is a plot of the values from ‘rawsignalvector’ in relation to the values from ‘timevector.’
-![](img/Raw_Signal.png)
+![](img/RawSignal.png)
 
 The next part of HRmonitor is to call another one of our made-function called BestCurveFit (see image below). BestCurveFit uses variables ‘maxdegree’, ‘signalsizevector’, and ‘rawsignalvector’ to create a curve that best fits the raw signal. The function ‘polyfit’ requires the degree number as an input but we do not know which degree number works best for the curve so we used a ‘for’ loop for each degree from 1 to ‘maxdegree’ (a variable from HRVariables). 
 
@@ -28,21 +28,21 @@ The output variables of the ‘polyfit’ function is ‘p’, ‘S’, and ‘m
 Subtracting ‘rawsignalvector’ from ‘curvefit{1,curvefitindex}’ (vector of the best curvefit) results in a vector of the detrended signal, ‘detrendsignal’ (see image below). The figure below the image is a plot of the values from ‘detrendsignal’ in relation to the values from ‘timevector.’
 ![](img/HRMonitor3.png)
 
-![](img/Detrended Signal.png)
+![](img/DetrendedSignal.png)
 The next part of HRMonitor is to create a fast fourier transform (fft) of the detrended signal using another one of our made-functions, ‘timetofreqdomain.’ To calculate the desired fft vector (‘fftvector’), we took the absolute value of the fft of ‘detrendsignal’ (there are complex numbers in ‘fft(detrendsignal)’) and shifted the vector so that frequency=0 is centered. By using ‘timevector’ and the length of ‘fftvector’ we can calculate the time step ‘dt.’ From there, sampling frequency and nyquist frequency is calculated. Then the frequency vector is created. Below are the images of ‘timetofreqdomain.’ The output variables of ‘timetofreqdomain’ is the detrended fft vector and its frequency vector (‘detrendfftvector’ and ‘detrendfreqvector’).
 ![](img/TimetoFreqDomain.png)
 
 The figure below is a plot of the values from ‘detrendfftvector’ in relation to the values from ‘detrendfreqvector.’
-![](img/Detrended FFT Signal.png)
+![](img/DetrendedFFTSignal.png)
 
 The next part of HRMonitor is filtering the detrended signal using a band pass filter, in the form of the function, BandPassHR, first made using sptool and imported as MATLAB code.  In BandPassHR we set values for the 4 passband frequencies (this filter is a bandpass filter which only accepts a certain range of frequencies): the first stopband frequency (‘Fstop1’), first passband frequency (‘Fpass1’), the second stopband frequency (‘Fstop2’), and the second passband frequency (‘Fpass2’). The filter range is from ‘Fpass1’ and ‘Fstop2.’ The other variables needed to create the band pass filter was the sampling frequency, which we set to 40 Hz. The output of BandPassHR is the variable ‘BandPass’ (the variable ‘Hd’ in BandPassHR).
 ![](img/BandPassHR.png)
 
 After calling BandPassHR, we use the ‘filter’ function with ‘BandPass’ and ‘detrendsignal’ to calculate the filtered signal vector (‘filteredsignal’). The figure below is a plot of the values from ‘filteredsignal’ in relation to the values from ‘timevector.’
-![](img/Filtered Signal Time.png)
+![](img/FilteredSignalTime.png)
 
 The next part of HRMonitor is calling timeoffreqdomain to calculate outputs ‘filterfftvector’ and ’filterfreqvector’ (filtered fft vector and filtered frequency vector respectively). The figure below is a plot of the values from ‘filterfftvector’ in relation to the values from ‘filterfreqvector.’
-![](img/Filtered Signal Frequency.png)
+![](img/FilteredSignalFrequency.png)
 
 
 By using the ‘max’ function we found the amplitude (‘MaxFFTAmp’) and the index location (‘FreqIndex’) of the frequency with the largest amplitude. Then we used ‘FreqIndex’ to trace back to the frequency with has the largest amplitude (‘HRFreq’). Because this value came from a filtered vector, ‘HRFreq’ is the frequency of the heart rate. The if-else statement shown in the image below means that right before the ‘for’ loop runs again for the second time and beyond, the time vector ‘BPMtime’ (from HRVariables) will have its first value be equal to the first value of the vector ‘looptime’, a vector created in the earlier part of HRMonitor. In other words, BPMtime(1)=looptime(1). This is the time interval used to find the first heart beat. As for the values after that the current ‘BPMtime’ is equal to the sum of the value of the previous ‘BPMtime’ and the value of the current ‘looptime’. In other words, BPMtime(counter) = BPMtime(counter-1)+looptime(counter). This adds the time needed to find the following heart beats for each successive loop. For every signal acquisition, HRMonitor will print to the command window the user’s heart rate and save this information to the datafile we created or plan to overwrite in the earlier part of the script. Lastly, HRMonitor turns off the red LED using the ‘writeDigitalPin’ function.
